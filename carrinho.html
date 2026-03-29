@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="dados-produtos.js"></script>
+    <title>Carrinho de Compras - GreenGO</title>
+  </head>
+  <body style="min-width: 372px;">
+    <!-- Barra de Navegação do Site-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm mb-3">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <img src="/imagens/logo_para_navbar-removebg-preview.png" alt="Logo GreenGo" height="40"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menuNavbar">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link text-success" href="index.html">Principal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-success" href="politica-privacidade.html">Política de Privacidade</a>
+                </li>
+            </ul>
+        <div class="allign-self-end">
+            <ul class="navbar-nav">
+                 <li class="nav-item">
+                    <a class="nav-link text-success" href="cadastro.html">Fazer Cadastro</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-success" href="login.html">Entrar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-success position-relative" href="carrinho.html">
+    <svg class="bi bi-cart" width="24" height="24" fill="currentColor">
+        <use xlink:href="/bi.svg#cart3"/>
+    </svg>
+    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        0
+    </span>
+</a>
+                </li>
+            </ul>
+        </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Conteúdo Principal -->
+<main class="mb-5 pb-5">
+    <div class="container mt-4">
+        <h1 class="text-success mb-4">Meu Carrinho de Compras</h1>
+
+        <!-- Se o carrinho estiver vazio -->
+        <div id="carrinhoVazio" class="alert alert-info" role="alert" style="display: none;">
+            <h5>Seu carrinho está vazio</h5>
+            <p>Que tal adicionar alguns produtos frescos? <a href="index.html" class="alert-link">Ir para loja</a></p>
+        </div>
+
+        <!-- Tabela do carrinho -->
+        <div id="carrinhoConteudo" style="display: none;">
+            <div class="table-responsive mb-4">
+                <table class="table table-hover">
+                    <thead class="table-success">
+                        <tr>
+                            <th>Produto</th>
+                            <th>Preço Unitário</th>
+                            <th>Quantidade</th>
+                            <th>Subtotal</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaCarrinho">
+                        <!-- Será preenchido por JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Resumo do pedido -->
+            <div class="row mt-4">
+                <div class="col-md-8"></div>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">Resumo do Pedido</h5>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal:</span>
+                                <span id="subtotal">R$ 0,00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Frete:</span>
+                                <span id="frete" class="text-success">Grátis</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between" style="font-size: 1.2rem; font-weight: bold;">
+                                <span>Total:</span>
+                                <span class="text-danger" id="total">R$ 0,00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-3">
+                        <button class="btn btn-success btn-lg" id="btnFinalizarCompra" type="button">
+                            Finalizar Compra
+                        </button>
+                        <a href="index.html" class="btn btn-outline-secondary">Continuar Comprando</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Rodapé do Site-->
+    <footer class="border-top fixed-bottom text-muted bg-success">
+        <div class="container">
+            <div class="row py-3">
+                <div class="col-12 col-md-4 text-center text-md-left text-light">
+                    &copy; 2026 GreenGO. Todos os direitos reservados.
+                </div>
+                <div class="col-12 col-md-4 text-center">
+                    <a href="#" class="text-decoration-none text-light">Política de Privacidade</a>
+                </div>
+                <div class="col-12 col-md-4 text-center text-md-right">
+                    <a href="#" class="text-decoration-none text-light">Administrar</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let carrinho = JSON.parse(localStorage.getItem('greengo_cart')) || [];
+            const spanContador = document.getElementById('cart-count');
+            const carrinhoVazio = document.getElementById('carrinhoVazio');
+            const carrinhoConteudo = document.getElementById('carrinhoConteudo');
+            const tabelaCarrinho = document.getElementById('tabelaCarrinho');
+            const btnFinalizarCompra = document.getElementById('btnFinalizarCompra');
+
+            function atualizarContador() {
+                spanContador.innerText = carrinho.length;
+            }
+
+            function calcularTotais() {
+                let subtotal = 0;
+                
+                // Agrupar produtos por ID e contar quantidade
+                const produtosAgrupados = {};
+                carrinho.forEach(item => {
+                    if (!produtosAgrupados[item.id]) {
+                        produtosAgrupados[item.id] = {
+                            ...item,
+                            quantidade: 1
+                        };
+                    } else {
+                        produtosAgrupados[item.id].quantidade++;
+                    }
+                });
+
+                // Calcular subtotal
+                Object.values(produtosAgrupados).forEach(item => {
+                    const preco = parseFloat(item.preco.replace(',', '.'));
+                    subtotal += preco * item.quantidade;
+                });
+
+                // Atualizar elementos
+                document.getElementById('subtotal').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+                document.getElementById('total').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+
+                return produtosAgrupados;
+            }
+
+            function renderizarCarrinho() {
+                if (carrinho.length === 0) {
+                    carrinhoVazio.style.display = 'block';
+                    carrinhoConteudo.style.display = 'none';
+                    atualizarContador();
+                    return;
+                }
+
+                carrinhoVazio.style.display = 'none';
+                carrinhoConteudo.style.display = 'block';
+
+                const produtosAgrupados = calcularTotais();
+
+                tabelaCarrinho.innerHTML = '';
+
+                Object.entries(produtosAgrupados).forEach(([id, item]) => {
+                    const preco = parseFloat(item.preco.replace(',', '.'));
+                    const subtotal = preco * item.quantidade;
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div class="d-flex">
+                                <img src="${item.imagem}" alt="${item.nome}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; margin-right: 10px;">
+                                <span>${item.nome}</span>
+                            </div>
+                        </td>
+                        <td>R$ ${item.preco}</td>
+                        <td>
+                            <div class="input-group" style="width: 120px;">
+                                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="diminuirQuantidade(${item.id})">-</button>
+                                <input type="number" class="form-control form-control-sm text-center" value="${item.quantidade}" readonly>
+                                <button class="btn btn-outline-secondary btn-sm" type="button" onclick="aumentarQuantidade(${item.id})">+</button>
+                            </div>
+                        </td>
+                        <td>R$ ${subtotal.toFixed(2).replace('.', ',')}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" type="button" onclick="removerProduto(${item.id})">
+                                <svg class="bi bi-trash" width="16" height="16" fill="currentColor">
+                                    <use xlink:href="/bi.svg#trash"/>
+                                </svg>
+                            </button>
+                        </td>
+                    `;
+                    tabelaCarrinho.appendChild(row);
+                });
+
+                atualizarContador();
+            }
+
+            window.aumentarQuantidade = function(produtoId) {
+                const produto = produtos.find(p => p.id === produtoId);
+                if (produto) {
+                    carrinho.push({
+                        id: produto.id,
+                        nome: produto.nome,
+                        preco: produto.preco,
+                        imagem: produto.imagem
+                    });
+                    localStorage.setItem('greengo_cart', JSON.stringify(carrinho));
+                    renderizarCarrinho();
+                }
+            };
+
+            window.diminuirQuantidade = function(produtoId) {
+                const index = carrinho.findIndex(item => item.id === produtoId);
+                if (index > -1) {
+                    carrinho.splice(index, 1);
+                    localStorage.setItem('greengo_cart', JSON.stringify(carrinho));
+                    renderizarCarrinho();
+                }
+            };
+
+            window.removerProduto = function(produtoId) {
+                carrinho = carrinho.filter(item => item.id !== produtoId);
+                localStorage.setItem('greengo_cart', JSON.stringify(carrinho));
+                renderizarCarrinho();
+            };
+
+            btnFinalizarCompra.addEventListener('click', function() {
+                if (carrinho.length === 0) {
+                    alert('Seu carrinho está vazio!');
+                    return;
+                }
+                alert('Redirecionando para o checkout...\n\nEsta é uma funcionalidade de demonstração. Em produção, você seria direcionado para um gateway de pagamento.');
+                // Aqui você redirecionaria para uma página de checkout ou gateway de pagamento
+            });
+
+            // Renderizar carrinho ao carregar
+            renderizarCarrinho();
+        });
+    </script>
+  </body>
+</html>

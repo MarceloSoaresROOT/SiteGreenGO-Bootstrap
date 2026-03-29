@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="dados-produtos.js"></script>
+    <title>Detalhes do Produto - GreenGO</title>
+  </head>
+  <body style="min-width: 372px;">
+    <!-- Barra de Navegação do Site-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm mb-3">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <img src="/imagens/logo_para_navbar-removebg-preview.png" alt="Logo GreenGo" height="40"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menuNavbar">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link text-success" href="index.html">Principal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-success" href="politica-privacidade.html">Política de Privacidade</a>
+                </li>
+            </ul>
+        <div class="allign-self-end">
+            <ul class="navbar-nav">
+                 <li class="nav-item">
+                    <a class="nav-link text-success" href="cadastro.html">Fazer Cadastro</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-success" href="login.html">Entrar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-success position-relative" href="carrinho.html">
+    <svg class="bi bi-cart" width="24" height="24" fill="currentColor">
+        <use xlink:href="/bi.svg#cart3"/>
+    </svg>
+    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        0
+    </span>
+</a>
+                </li>
+            </ul>
+        </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Conteúdo Principal -->
+<main class="mb-5 pb-5">
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12 col-md-6 mb-4">
+                <img id="produtoImagem" src="" alt="Produto" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-12 col-md-6">
+                <h1 id="produtoNome" class="text-success mb-3"></h1>
+                <div class="mb-3">
+                    <h3 class="text-danger" id="produtoPreco"></h3>
+                </div>
+                <div class="mb-3">
+                    <p id="produtoDescricaoCompleta" class="text-muted"></p>
+                </div>
+                <div class="mb-3">
+                    <p><strong>Estoque:</strong> <span id="produtoEstoque" class="text-success"></span></p>
+                </div>
+                <div class="mb-3">
+                    <label for="quantidadeInput" class="form-label"><strong>Quantidade:</strong></label>
+                    <input type="number" id="quantidadeInput" class="form-control" value="1" min="1">
+                </div>
+                <div class="d-grid gap-2 d-md-flex">
+                    <button id="btnAdicionarCarrinho" class="btn btn-danger btn-lg" type="button">
+                        <svg class="bi bi-cart-plus" width="20" height="20" fill="currentColor">
+                            <use xlink:href="/bi.svg#cart-plus"/>
+                        </svg>
+                        Adicionar ao Carrinho
+                    </button>
+                    <a href="index.html" class="btn btn-outline-secondary btn-lg">Voltar</a>
+                </div>
+                <div id="mensagemAdicionado" class="alert alert-success mt-3" role="alert" style="display: none;">
+                    ✓ Produto adicionado ao carrinho com sucesso!
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-5">
+
+        <!-- Produtos Relacionados -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="text-success mb-4">Produtos Relacionados</h3>
+            </div>
+            <div id="produtosRelacionados" class="row">
+                <!-- Será preenchido por JavaScript -->
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Rodapé do Site-->
+    <footer class="border-top fixed-bottom text-muted bg-success">
+        <div class="container">
+            <div class="row py-3">
+                <div class="col-12 col-md-4 text-center text-md-left text-light">
+                    &copy; 2026 GreenGO. Todos os direitos reservados.
+                </div>
+                <div class="col-12 col-md-4 text-center">
+                    <a href="#" class="text-decoration-none text-light">Política de Privacidade</a>
+                </div>
+                <div class="col-12 col-md-4 text-center text-md-right">
+                    <a href="#" class="text-decoration-none text-light">Administrar</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obter o ID do produto da URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const produtoId = parseInt(urlParams.get('id'));
+
+            // Encontrar o produto
+            const produto = produtos.find(p => p.id === produtoId);
+
+            if (produto) {
+                // Preencher os dados do produto
+                document.getElementById('produtoNome').innerText = produto.nome;
+                document.getElementById('produtoPreco').innerText = `R$ ${produto.preco}`;
+                document.getElementById('produtoDescricaoCompleta').innerText = produto.descricaoCompleta;
+                document.getElementById('produtoEstoque').innerText = produto.estoque;
+                document.getElementById('produtoImagem').src = produto.imagem;
+                document.title = `${produto.nome} - GreenGO`;
+
+                // Preencher produtos relacionados
+                const relacionados = produtos.filter(p => p.id !== produtoId).slice(0, 6);
+                const containerRelacionados = document.getElementById('produtosRelacionados');
+                
+                relacionados.forEach(prod => {
+                    const colDiv = document.createElement('div');
+                    colDiv.className = 'col-xl-2 col-lg-3 col-md-4 col-sm-6 d-flex align-items-stretch mb-3';
+                    colDiv.innerHTML = `
+                        <div class="card text-center bg-light w-100">
+                            <a href="produto.html?id=${prod.id}" class="text-decoration-none">
+                                <img src="${prod.imagem}" alt="${prod.nome}" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title text-dark">${prod.nome}</h5>
+                                    <p class="card-text truncate-3l text-muted">${prod.descricao}</p>
+                                </div>
+                                <div class="card-header">
+                                    R$ ${prod.preco}
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                    containerRelacionados.appendChild(colDiv);
+                });
+
+                // Funcionalidade do botão adicionar ao carrinho
+                let carrinho = JSON.parse(localStorage.getItem('greengo_cart')) || [];
+                const spanContador = document.getElementById('cart-count');
+
+                function atualizarContador() {
+                    if (spanContador) {
+                        spanContador.innerText = carrinho.length;
+                    }
+                    localStorage.setItem('greengo_cart', JSON.stringify(carrinho));
+                }
+
+                document.getElementById('btnAdicionarCarrinho').addEventListener('click', () => {
+                    const quantidade = parseInt(document.getElementById('quantidadeInput').value);
+                    
+                    for (let i = 0; i < quantidade; i++) {
+                        carrinho.push({
+                            id: produto.id,
+                            nome: produto.nome,
+                            preco: produto.preco,
+                            imagem: produto.imagem
+                        });
+                    }
+
+                    atualizarContador();
+
+                    // Mostrar mensagem de sucesso
+                    const mensagem = document.getElementById('mensagemAdicionado');
+                    mensagem.style.display = 'block';
+
+                    // Mudar o botão
+                    const botao = document.getElementById('btnAdicionarCarrinho');
+                    const textoOriginal = botao.innerHTML;
+                    botao.innerHTML = '✓ Adicionado!';
+                    botao.classList.replace('btn-danger', 'btn-success');
+
+                    setTimeout(() => {
+                        botao.innerHTML = textoOriginal;
+                        botao.classList.replace('btn-success', 'btn-danger');
+                        mensagem.style.display = 'none';
+                    }, 2000);
+                });
+
+                // Inicializar o contador
+                atualizarContador();
+            } else {
+                // Produto não encontrado
+                document.body.innerHTML += '<div class="alert alert-danger m-5">Produto não encontrado!</div>';
+            }
+        });
+    </script>
+  </body>
+</html>
