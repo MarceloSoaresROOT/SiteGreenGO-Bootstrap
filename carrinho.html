@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
     <script src="dados-produtos.js"></script>
     <title>Carrinho de Compras - GreenGO</title>
   </head>
@@ -13,7 +13,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm mb-3">
     <div class="container">
         <a class="navbar-brand" href="index.html">
-            <img src="/imagens/logo_para_navbar-removebg-preview.png" alt="Logo GreenGo" height="40"></a>
+            <img src="imagens/logo_para_navbar-removebg-preview.png" alt="Logo GreenGo" height="40"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -37,7 +37,7 @@
                 <li class="nav-item">
                     <a class="nav-link text-success position-relative" href="carrinho.html">
     <svg class="bi bi-cart" width="24" height="24" fill="currentColor">
-        <use xlink:href="/bi.svg#cart3"/>
+        <use xlink:href="bi.svg#cart3"/>
     </svg>
     <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
         0
@@ -132,7 +132,7 @@
         </div>
     </footer>
 
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let carrinho = JSON.parse(localStorage.getItem('greengo_cart')) || [];
